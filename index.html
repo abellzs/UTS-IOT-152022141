@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+        <h2>UTS IOT - MOCH ABEL AVRIYANA SAVERO - 152022141</h2>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <h3>Suhu Maksimum</h3>
+                <p id="suhumax">Loading...</p>
+            </div>
+            <div class="stat-item">
+                <h3>Suhu Minimum</h3>
+                <p id="suhumin">Loading...</p>
+            </div>
+            <div class="stat-item">
+                <h3>Rata-rata Suhu</h3>
+                <p id="average">Loading...</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Nilai Suhu dan Humiditas Maksimum</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Suhu</th>
+                        <th>Humidity</th>
+                        <th>Lux</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="nilai_suhu_max_humid_max">
+                    <tr><td colspan="5">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Bulan dan Tahun Maksimum</h2>
+            <ul id="month_year_max">
+                <li>Loading...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            const response = await fetch("http://localhost:5000/Data");
+            const data = await response.json();
+            
+            document.getElementById("suhumax").textContent = data.suhumax;
+            document.getElementById("suhumin").textContent = data.suhumin;
+            document.getElementById("average").textContent = data.average.toFixed(2);
+            
+            const nilaiSuhuMaxHumidMaxTable = document.getElementById("nilai_suhu_max_humid_max");
+            nilaiSuhuMaxHumidMaxTable.innerHTML = '';
+            data.nilai_suhu_max_humid_max.forEach(item => {
+                const row = `<tr>
+                    <td>${item.id}</td>
+                    <td>${item.suhu}</td>
+                    <td>${item.humid}</td>
+                    <td>${item.Lux}</td>
+                    <td>${item.Timestamp}</td>
+                </tr>`;
+                nilaiSuhuMaxHumidMaxTable.innerHTML += row;
+            });
+
+            const monthYearMaxList = document.getElementById("month_year_max");
+            monthYearMaxList.innerHTML = '';
+            data.month_year_max.forEach(item => {
+                const listItem = `<li>${item.month_year}</li>`;
+                monthYearMaxList.innerHTML += listItem;
+            });
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
